@@ -247,9 +247,9 @@ return new class extends Migration
             $table->unsignedBigInteger('pos_id')->nullable();
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->string('category_code')->nullable();
-            $table->string('category_name');
+            $table->string('name');
             $table->unsignedBigInteger('force_removal_strategy_id')->nullable();
-            $table->enum('costing_method', ['standard', 'fifo', 'avco']);
+            $table->enum('costing_method', ['standard', 'fifo', 'avco'])->nullable();
             $table->integer('available_start')->default(0);
             $table->integer('available_end')->default(24);
             $table->string('image_path')->nullable();
@@ -301,8 +301,8 @@ return new class extends Migration
             $table->enum('control_policy', ['ordered', 'received'])->default('received'); //Ordered: Control bills on ordered qties, received: Control bills on delivered qties
             $table->text('purchase_description')->nullable();
             // Taxes
-            $table->text('sale_taxes')->nullable(); // Using text type to store serialized array
-            $table->text('purchase_taxes')->nullable(); // Using text type to store serialized array
+            $table->json('sale_taxes')->nullable(); // Using json type to store serialized array
+            $table->json('purchase_taxes')->nullable(); // Using json type to store serialized array
             $table->json('taxes')->nullable(); //['sale' => [], 'purchase' => [], 'misc' => []]
             // Tracking
             $table->enum('tracking', ['unique_serial_number', 'lots', 'no_tracking'])->default('no_tracking');

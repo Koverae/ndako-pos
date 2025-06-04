@@ -80,15 +80,15 @@ class PosForm extends LightWeightForm
         ->toast()
         ->show();
 
-        return $this->redirect(route('pos.show'), navigate: true);
+        return $this->redirect(route('pos.show', $pos->id), navigate: true);
     }
 
     #[On('update-pos')]
     public function updatePos(){
 
         $this->validate();
-
-        $this->pos->update([
+        $pos = $this->pos;
+        $pos->update([
             'name' => $this->name,
             'has_multiple_employee' => $this->multiple_employee,
             'is_restaurant' => true,
@@ -102,6 +102,6 @@ class PosForm extends LightWeightForm
         ->toast()
         ->show();
 
-        return $this->redirect(route('pos.show'), navigate: true);
+        return $this->redirect(route('pos.show', $pos->id), navigate: true);
     }
 }
