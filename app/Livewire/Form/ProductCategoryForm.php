@@ -15,37 +15,42 @@ use Modules\App\Livewire\Components\Form\Table;
 use Modules\App\Livewire\Components\Form\Template\LightWeightForm;
 use Modules\App\Livewire\Components\Table\Column;
 use Modules\App\Traits\Files\HasFileUploads;
+use Modules\Pos\Models\Pos\Pos;
 use Modules\Pos\Models\Product\ProductCategory;
 
 class ProductCategoryForm extends LightWeightForm
 {
     public $category;
-    public $name, $parent, $status;
-    public $parentOptions = [];
+    public $name, $pos, $parent, $status;
+    public $parentOptions = [], $posOptions = [];
 
     public function mount($category = null){
         $this->default_img = 'placeholder';
         $this->hasPhoto = true;
 
         $this->parentOptions = toSelectOptions(ProductCategory::isCompany(current_company()->id)->get(), 'id', 'name');
+        $this->posOptions = toSelectOptions(Pos::isCompany(current_company()->id)->get(), 'id', 'name');
 
         if($category){
             $this->category = $category;
             $this->name = $category->name;
-            $this->parent = $category->parent;
+            $this->pos = $category->pos_id;
+            $this->parent = $category->parent_id;
             $this->image_path = $category->image_path;
         }
     }
 
     protected $rules = [
         'name' => 'required|string|max:30',
-        'parent' => 'nullable|integer|exists:product_categories,name'
+        'pos' => 'required|integer|exists:pos,id',
+        'parent' => 'nullable|integer|exists:product_categories,id'
     ];
 
     public function inputs(): array
     {
         return [
             Input::make('name', "Product Category", 'text', 'name', 'top-title', 'none', 'none', __('e.g. Hot Drinks'))->component('app::form.input.ke-title'),
+            Input::make('category-pos', "Restaurant / Bar", 'select', 'pos', 'left', 'none', 'none', "", null, $this->posOptions),
             Input::make('parent-category', "Parent Category", 'select', 'parent', 'left', 'none', 'none', "", null, $this->parentOptions),
         ];
     }
@@ -80,6 +85,7 @@ class ProductCategoryForm extends LightWeightForm
         $category = ProductCategory::create([
             'company_id' => current_company()->id,
             'name' => $this->name,
+            'pos_id' => $this->pos,
             'parent_id' => $this->parent,
         ]);
 
@@ -118,6 +124,7 @@ class ProductCategoryForm extends LightWeightForm
         $category->update([
             'name' => $this->name,
             'parent_id' => $this->parent,
+            'pos_id' => $this->pos,
         ]);
 
         LivewireAlert::title('Product Category saved!')

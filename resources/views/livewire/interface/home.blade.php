@@ -13,7 +13,7 @@
                 <!-- Categories -->
                 <div class="category_section_buttons">
                     <div class="d-flex w-100">
-                        <span class="category_button home">
+                        <span class="category_button cursor-pointer home {{ $selectedCategoryId == null ? 'selected' : '' }}" wire:click="selectCategory('')">
                             <i class="bi bi-house-fill"></i>
                         </span>
                         <div class="cursor-pointer d-flex w-100 section_buttons">
@@ -24,7 +24,7 @@
                                 Food
                             </span>
                             @foreach ($productCategoryOptions as $category)
-                            <span class="gap-2 category_button">
+                            <span class="gap-2 category_button {{ $selectedCategoryId == $category->id ? 'selected' : '' }}" wire:click="selectCategory('{{ $category->id }}')">
                                 {{ $category->name }}
                             </span>
                             @endforeach
@@ -40,10 +40,10 @@
                         <div class="product-information-tag">
                             <i class="bi bi-info" aria-label="Product info"></i>
                         </div>
-                        <div class="badge badge-info">{{ $product->qty }}</div>
-                        <img src="{{ $product->image_path ? Storage::url('avatars/' . $product->image_path) . '?v=' . time() : asset('assets/images/default/user.png') }}" alt="{{ $product->image_path }}" class="card-img-top" alt="Deluxe Suite">
+                        <div class="badge badge-info">{{ $product->product_quantity }}</div>
+                        <img src="{{ $product->image_path ? Storage::url('avatars/' . $product->image_path) . '?v=' . time() : asset('assets/images/default/product.png') }}" alt="{{ $product->product_name }}" class="card-img-top" alt="Deluxe Suite">
                         <div class="product-content">
-                            <div class="product-name">{{ $product->name }}</div>
+                            <div class="product-name">{{ $product->product_name }}</div>
                             <div class="price-tag">{{ format_currency(($product->product_price)) }}</div>
                         </div>
                     </article>

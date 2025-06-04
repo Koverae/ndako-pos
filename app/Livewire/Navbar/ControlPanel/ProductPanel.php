@@ -29,7 +29,7 @@ class ProductPanel extends ControlPanel
             $this->showIndicators = true;
             $this->product = $product;
             $this->isForm = true;
-            $this->currentPage = $product->name;
+            $this->currentPage = $product->product_name;
         }else{
             $this->currentPage = 'Products';
         }

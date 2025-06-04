@@ -52,7 +52,7 @@ class ProductTable extends Table
     public function columns() : array
     {
         return [
-            Column::make('name', __('Product'))->component('app::table.column.special.show-title-link'),
+            Column::make('product_name', __('Product'))->component('app::table.column.special.show-title-link'),
             Column::make('product_reference', 'Internal Reference'),
             Column::make('product_price', 'Sales Price')->component('app::table.column.special.price'),
             Column::make('product_quantity', 'On Hand'),
