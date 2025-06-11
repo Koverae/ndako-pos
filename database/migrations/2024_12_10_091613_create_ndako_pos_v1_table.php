@@ -149,11 +149,12 @@ return new class extends Migration
             $table->unsignedBigInteger('pos_session_id')->nullable();
             $table->unsignedBigInteger('cashier_id')->nullable();
             $table->date('date');
+            $table->enum('service_type', ['eat-in', 'take-away', 'in-room', 'delivery'])->default('eat-in');
             $table->unsignedBigInteger('customer_id')->nullable();
             $table->unsignedBigInteger('fiscal_position_id')->nullable();
             $table->unsignedBigInteger('table_id')->nullable();
             $table->integer('guest')->default(1);
-            $table->enum('status', ['new', 'posted', 'invoiced', 'cancelled'])->default('new');
+            $table->enum('status', ['ongoing', 'receipt', 'served', 'paid', 'canceled'])->default('ongoing');
             $table->enum('payment_status', ['unpaid', 'partial', 'paid'])->default('unpaid');
             $table->string('payment_method')->default('cash');
             $table->string('receipt_number')->nullable();
@@ -178,12 +179,12 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id')->nullable();
             $table->string('description')->nullable();
             $table->decimal('quantity', $precision = 12, $scale = 2);
-            $table->decimal('price', $precision = 12, $scale = 2);
-            $table->decimal('unit_price', $precision = 12, $scale = 2);
-            $table->decimal('sub_total', $precision = 12, $scale = 2);
-            $table->decimal('product_discount_amount', $precision = 12, $scale = 2);
+            $table->decimal('price', $precision = 12, $scale = 2)->default(0);
+            $table->decimal('unit_price', $precision = 12, $scale = 2)->default(0);
+            $table->decimal('sub_total', $precision = 12, $scale = 2)->default(0);
+            $table->decimal('product_discount_amount', $precision = 12, $scale = 2)->default(0);
             $table->string('product_discount_type')->default('fixed');
-            $table->decimal('product_tax_amount', $precision = 12, $scale = 2);
+            $table->decimal('product_tax_amount', $precision = 12, $scale = 2)->default(0);
             $table->mediumText('customer_note')->nullable();
             $table->decimal('refunded_quantity', $precision = 12, $scale = 2)->default(0.00);
 
@@ -196,10 +197,13 @@ return new class extends Migration
         // POS Order Payments
         Schema::create('pos_order_payments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('company_id');
+            $table->unsignedBigInteger('company_id')->nullable();
+            $table->unsignedBigInteger('pos_id')->nullable();
             $table->unsignedBigInteger('pos_session_id')->nullable();
             $table->unsignedBigInteger('pos_order_id');
-            $table->date('date');
+            $table->unsignedBigInteger('guest_id')->nullable();
+            $table->date('date')->nullable();
+            $table->string('reference')->nullable();
             $table->string('label')->nullable();
             $table->unsignedBigInteger('payment_method_id')->nullable();
             $table->decimal('amount', $precision = 12, $scale = 2)->default(0);
@@ -233,6 +237,7 @@ return new class extends Migration
             $table->string('table_name');
             $table->integer('seats')->default(1);
             $table->enum('shape', ['square', 'circle', 'rectangle', 'hexagon', 'octagon'])->default('square');
+            $table->enum('status', ['available', 'occupied', 'reserved', 'out'])->default('available');
 
             $table->foreign('company_id')->references('id')->on('companies')->cascadeOnDelete();
 

@@ -35,7 +35,7 @@ class FloorPlan extends Model
     }
 
     // Get Pos
-    public function plans() {
+    public function tables() {
         return $this->hasMany(Table::class, 'floor_plan_id', 'id');
     }
 }

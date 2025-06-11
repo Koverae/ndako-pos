@@ -1,11 +1,11 @@
-@section('title', "Products")
+@section('title', "Orders")
 
 <!-- Control Panel -->
 @section('control-panel')
-<livewire:pos::navbar.control-panel.product-panel :isForm="false" />
+<livewire:pos::navbar.control-panel.order-panel :isForm="false" />
 @endsection
 <!-- Page Content -->
 <section class="w-100">
-    <livewire:pos::table.product-table />
+    <livewire:pos::table.order-table />
 </section>
 <!-- Page Content -->

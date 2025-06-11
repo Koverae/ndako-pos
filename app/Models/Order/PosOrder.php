@@ -10,6 +10,7 @@ use Modules\ChannelManager\Models\Guest\Guest;
 use Modules\Pos\Models\Pos\PosSession;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Modules\Pos\Models\Floor\Table;
 use Modules\Pos\Models\Pos\Pos;
 
 class PosOrder extends Model
@@ -64,8 +65,13 @@ class PosOrder extends Model
         return $this->belongsTo(PosSession::class, 'pos_session_id', 'id');
     }
 
+    // Session
+    public function table() {
+        return $this->belongsTo(Table::class, 'table_id', 'id');
+    }
+
     // Get Customer
-    public function customer() {
+    public function guest() {
         return $this->belongsTo(Guest::class, 'customer_id', 'id');
     }
 

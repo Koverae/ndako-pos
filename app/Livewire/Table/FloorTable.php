@@ -7,44 +7,49 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Route;
 use Modules\App\Livewire\Components\Table\Card;
 use Modules\App\Livewire\Components\Table\Column;
-use Modules\Pos\Models\Pos\Pos;
+use Modules\Pos\Models\Floor\FloorPlan;
 
-class PosTable extends Table
+class FloorTable extends Table
 {
     public array $data = [];
 
 
     public function mount(){
-        $this->view_type = 'kanban';
-        $this->view = 'app::livewire.components.table.template.kanban';
         $this->data = ['email', 'phone', 'street'];
     }
 
 
     public function showRoute($id) : string
     {
-        return route('pos.show', ['pos' => $id]);
+        return route('pos-floors.show', ['floor' => $id]);
     }
 
     public function emptyTitle(): string
     {
-        return 'Feeling a Bit Empty Here 🍽️';
+        return 'No Floor Plans Yet';
     }
 
     public function emptyText(): string
     {
-        return 'Start by adding your first restaurant or bar to manage menus, staff, and services. Once added, it’ll show up here.';
+        return 'Create a floor plan to visualize your restaurant layout and manage your tables efficiently.';
     }
 
     public function query() : Builder
     {
-        $query = Pos::query();
+        $query = FloorPlan::query();
 
         // Apply the search query filter if a search query is present
         if ($this->searchQuery) {
             // Search both the booking's name and the related guest's name
-            $query = Pos::query()
+            $query = FloorPlan::query()
             ->where('name', 'like', '%' . $this->searchQuery . '%');
+        }
+
+        // 🎯 Filters
+        if (!empty($this->filters)) {
+            foreach ($this->filters as $field => $value) {
+                $query->where($field, $value);
+            }
         }
 
         return $query; // Returns a Builder instance for querying the User model
@@ -55,8 +60,7 @@ class PosTable extends Table
     {
         return [
             Column::make('name', __('Name'))->component('app::table.column.special.show-title-link'),
-            Column::make('email', __('Email')),
-            Column::make('street', __('Address')),
+            Column::make('pos_id', 'Restaurant')->component('app::table.column.special.pos.restaurant'),
         ];
     }
 
@@ -64,7 +68,7 @@ class PosTable extends Table
     public function cards() : array
     {
         return [
-            Card::make('name', "name", "", $this->data)->component('app::table.card.template.pos'),
+            Card::make('name', "name", "", $this->data),
         ];
     }
 }

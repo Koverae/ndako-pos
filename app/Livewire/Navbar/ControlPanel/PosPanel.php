@@ -42,7 +42,7 @@ class PosPanel extends ControlPanel
     {
         return  [
             // make($key, $label)
-            SwitchButton::make('lists',"switchView('lists')", "bi-list-task"),
+            // SwitchButton::make('lists',"switchView('lists')", "bi-list-task"),
             SwitchButton::make('kanban',"switchView('kanban')", "bi-kanban"),
         ];
     }
